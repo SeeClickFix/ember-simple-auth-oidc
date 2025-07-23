@@ -92,7 +92,9 @@
     "webpack": "5.89.0"
   },
   "peerDependencies": {
-    "ember-source": ">= 4.0.0"
+    "@embroider/macros": ">= 1.0.0",
+    "ember-source": ">= 4.0.0",
+    "ember-simple-auth": ">= 6.0.0"
   },
   "packageManager": "pnpm@8.8.0",
   "engines": {
