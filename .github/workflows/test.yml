@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - scf_master
   pull_request:
     branches:
       - main
+      - scf_master
 
 env:
   NODE_VERSION: 18
