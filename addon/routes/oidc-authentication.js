@@ -64,8 +64,9 @@ export default class OIDCAuthenticationRoute extends Route {
    * @param {Object} transition.to.queryParams The query params of the transition
    * @param {String} transition.to.queryParams.code The authentication code given by the identity provider
    * @param {String} transition.to.queryParams.state The state given by the identity provider
+   * @param {Object} customParams Custom query params to be added to the redirect URL
    */
-  async afterModel(_, transition) {
+  async afterModel(_, transition, customParams = {}) {
     if (!this.config.authEndpoint) {
       throw new Error(
         "Please define all OIDC endpoints (auth, token, logout, userinfo)",
@@ -84,7 +85,7 @@ export default class OIDCAuthenticationRoute extends Route {
       );
     }
 
-    return this._handleRedirectRequest(queryParams);
+    return this._handleRedirectRequest(queryParams, customParams);
   }
 
   /**
@@ -130,7 +131,7 @@ export default class OIDCAuthenticationRoute extends Route {
    * match this state, otherwise the authentication will fail to prevent from
    * CSRF attacks.
    */
-  _handleRedirectRequest(queryParams) {
+  _handleRedirectRequest(queryParams, customParams = {}) {
     const state = v4();
 
     // Store state to session data
@@ -155,6 +156,7 @@ export default class OIDCAuthenticationRoute extends Route {
       `state=${state}`,
       `scope=${this.config.scope}`,
       queryParams[key] ? `${key}=${queryParams[key]}` : null,
+      new URLSearchParams(customParams).toString(),
     ];
 
     if (this.config.enablePkce) {
